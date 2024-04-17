@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vue Popup Example</title>
+<style>
+  /* Остальные стили добавим после */
+</style>
+</head>
+<body>
+  <div id="app">
+    <popup-modal v-if="showModal" @close="showModal = false" @submit="handleSubmit"></popup-modal>
+    <button v-if="!showModal" @click="showModal = true">Начать</button>
+    <div v-if="submittedData" class="submitted-data">
+      <h3>Введенные данные:</h3>
+      <pre>{{ submittedData }}</pre>
+    </div>
+  </div>
+
+  <!-- Подключение Vue.js -->
+  <script src="https://unpkg.com/vue@2.6.14/dist/vue.js"></script>
+  <!-- Определение компонента и логики приложения -->
+  <script>
+    // Код JavaScript будет здесь
+  </script>
+  <style>
+    /* Базовые стили для кнопки */
+    button {
+      padding: 10px 20px;
+      margin: 20px;
+      cursor: pointer;
+    }
+  
+    /* Стили для  фона */
+    .modal-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  
+    /* Стили попапа */
+    .modal-content {
+      background: white;
+      padding: 20px;
+      max-width: 500px;
+      width: 90%;
+    }
+  
+    /* Стиль кнопки в попапе */
+    .modal-field {
+      display: flex;
+      margin-bottom: 10px;
+    }
+  
+    .modal-field input {
+      margin-right: 10px;
+      flex: 1;
+    }
+  
+    @media (max-width: 768px) {
+      .modal-field {
+        flex-direction: column;
+      }
+  
+      .modal-field input {
+        margin-bottom: 10px;
+      }
+    }
+  
+    /* Стили для отображения данных */
+    .submitted-data {
+      margin: 20px;
+    }
+  </style>
+  <script>
+    Vue.component('popup-modal', {
+      template: `
+        <div class="modal-background" @click.self="$emit('close')">
+          <div class="modal-content">
+            <h2>Введите данные</h2>
+            <div class="modal-field">
+              <input type="text" v-model="formData.name" placeholder="Имя">
+              <input type="text" v-model="formData.surname" placeholder="Фамилия">
+            </div>
+            <div class="modal-field">
+              <input type="text" v-model="formData.email" placeholder="Email">
+              <input type="text" v-model="formData.phone" placeholder="Телефон">
+            </div>
+            <div class="modal-field">
+              <input type="text" v-model="formData.city" placeholder="Город">
+            </div>
+            <button @click="submit">Отправить</button>
+          </div>
+        </div>
+      `,
+      data() {
+        return {
+          formData: {
+            name: '',
+            surname: '',
+            email: '',
+            phone: '',
+            city: ''
+          }
+        }
+      },
+      methods: {
+        submit() {
+          this.$emit('submit', { ...this.formData });
+          this.$emit('close');
+        }
+      }
+    });
+  
+    new Vue({
+      el: '#app',
+      data: {
+        showModal: false,
+        submittedData: null
+      },
+      methods: {
+        handleSubmit(data) {
+          this.submittedData = JSON.stringify(data, null, 2);
+        }
+      }
+    });
+  </script>
+</body>
+</html>
